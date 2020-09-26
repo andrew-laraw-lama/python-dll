@@ -92,7 +92,6 @@ class CDLL:
             self.current = self.current.next_node
             # print("self current go next", self.current.tweet)
 
-    # moves 'current' pointer to the previous node (circularly)
     def go_prev(self):
         """
         Moves 'current' pointer to the previous node (circularly)
@@ -101,7 +100,6 @@ class CDLL:
         :post: current pointer is now at the next node ( to right of original position)
         """
         if self.head:
-        # if self.current.prev_node is not None:
             self.current = self.current.prev_node
 
     # moves 'current' pointer to the head (the first node)
