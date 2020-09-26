@@ -19,7 +19,7 @@ class CDLLNode:
             CDLLNode("time","tweet",[Next Node], [Previous Node])
 
     """
-    def __init__(self, time="", tweet="", next_node=None, prev_node=None):
+    def __init__(self, time="", tweet="", next_node=None, prev_node=None) -> None:
         """
         Constructor for CDLLNode. It creates a node for a Double Linked List.
         :param time: string
@@ -38,7 +38,7 @@ class CDLL:
         Doubly Linked List. It will contain instances of CDLLNode.
         Upon instantiating it will contain an empty doubly linked list.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         """
             Constructor for CDLL. (Doubly Linked List)
             It contains head  = the smallest time stamp
@@ -46,12 +46,10 @@ class CDLL:
                                        or the next node position of the newly inserted node.
                         numnodes = the number of nodes that were inserted to the list.
         """
-
         self.head: CDLLNode = None
         self.current: CDLLNode = None
         self.numnodes: int = 0
 
-    # makes an insertion based on the 'current' node
     def insert(self, time: str, tweet: str) -> None:
         """
         It will insert a new node to the CDLL.
@@ -86,62 +84,92 @@ class CDLL:
         Moves 'current' pointer to the next node (circularly)
         :return: None
         :pre: next node of current cannot be NULL
-        :post: current pointer is now at the next node ( to right of original position)
+        :post: current pointer is now at the next node ( to the right of original position)
         """
         if self.current.next_node is not None:
             self.current = self.current.next_node
-            # print("self current go next", self.current.tweet)
 
-    def go_prev(self):
+    def go_prev(self) -> None:
         """
-        Moves 'current' pointer to the previous node (circularly)
+        To move 'current' pointer to the previous node (circularly)
         :return: None
         :pre: next node of current cannot be NULL
-        :post: current pointer is now at the next node ( to right of original position)
+        :post: current pointer is now at the next node ( to the right of original position)
         """
         if self.head:
             self.current = self.current.prev_node
 
-    # moves 'current' pointer to the head (the first node)
-    def go_first(self):
+
+    def go_first(self) -> None:
+        """
+        To move 'current' pointer to the head (the first node)
+        :return: None
+        :pre: current can be at anywhere
+        :post: current is now at head
+        """
         if self.head:
             self.current = self.head
 
-    # moves 'current' pointer to the last node
-    def go_last(self):
+    def go_last(self) -> None:
+        """
+        To move 'current' pointer to the last node
+        :return: None
+        :pre: current can be at anywhere
+        :post: current is now right of head  ( current <-> head )
+        """
         if self.head:
             if self.numnodes > 1:
                 self.current = self.head.prev_node
 
-    # moves 'current' pointer n elements ahead (circularly)
-    def skip(self, n: int):
+    def skip(self, n: int) -> None:
+        """
+        To move 'current' pointer n elements ahead (circularly)
+        :param n: the number of time to go to the right of node (next node)
+        :return: None
+        :pre: current can be at anywhere
+        :post: current is now at n times next of the previous current position
+        """
         if self.head:
             for i in range(n):
                 self.current = self.current.next_node
 
-    # prints the contents of the 'current' node
-    # prints the time, then the tweet (each with a newline following)
-    def print_current(self):
+    def print_current(self) -> None:
+        """
+        To print the contents of the 'current' node
+        It first prints the time, then the tweet (each with a newline following)
+        :return: None
+        """
         if self.head:
             print(self.current.time)
             print(self.current.tweet)
 
-    def get_num_node(self):
+    def get_num_node(self) -> int:
+        """
+        Getter for the CDLL
+        :return: The number of nodes contained in the CDLL
+        """
         return self.numnodes
 
     def set_head(self) -> None:
+        """
+        To correct the position of the head to the right chronological position.
+        :return: None
+        :pre: current node is smaller than the head node.
+        :post: head node is at the right place chronologically.
+        """
         if self.numnodes >= 2:
             if self.current == self.head:
-                head_time = self.head.time
-                t_format = "%H:%M:%S"
-                # if datetime.strptime(head_time, t_format) >= datetime.strptime(self.current.prev_node.time, t_format):
-                if head_time >= self.current.prev_node.time:
-
+                if self.head.time >= self.current.prev_node.time:
                     self.head = self.current.prev_node
-                # print(self.head.time)
 
     def set_current(self, time) -> None:
-
+        """
+        The is the most CRUCIAL FUNCTION.
+        This function uses Binary search pattern in the doubly linked list and optimized the time search.
+        It set the current node to the given time.
+        :param time:
+        :return:
+        """
         if self.numnodes <= 1:
             return
 
@@ -160,6 +188,8 @@ class CDLL:
         t_format = "%H:%M:%S"
         # print("while true start")
         while True:
+            # the next three if statements check for the same exact time
+            # it will set the current node to the last entry of the same exact time node
             if left_node.time == time:
                 # while
                 self.current = left_node
@@ -174,7 +204,7 @@ class CDLL:
                 self.current = right_node
                 return
 
-            # check this one for what it is doing
+            # at the end of search patern and it sets the current node to be right of the new node
             if left_node == right_node:
                 if left_node.time < time:
                     self.current = left_node.next_node
@@ -223,42 +253,68 @@ class CDLL:
                 else:
                     self.current = left_node
                     return
-
-            #mid_node_position =
-
-
-            # print(self.current.time)
-
-
 """End of Class CDLL"""
 
-
-def print_first_tweet(cdll: CDLL):
+"""Beginning of optimize.py"""
+def print_first_tweet(cdll: CDLL) -> None:
+    """
+    Print the first tweet
+    :param cdll: Doubly linked list
+    :return: None
+    """
     cdll.go_first()
     cdll.print_current()
 
 
-def print_last_tweet(cdll: CDLL):
+def print_last_tweet(cdll: CDLL) -> None:
+    """
+    Print the last tweet
+    :param cdll: Doubly linked list
+    :return: None
+    """
     cdll.go_last()
     cdll.print_current()
 
 
-def print_next_tweet(cdll: CDLL):
+def print_next_tweet(cdll: CDLL) -> None:
+    """
+    Print the next tweet
+    :param cdll: Doubly linked llist
+    :return: None
+    """
     cdll.go_next()
     cdll.print_current()
 
 
-def print_prev_tweet(cdll: CDLL):
+def print_prev_tweet(cdll: CDLL) -> None:
+    """
+    Print the previous tweet
+    :param cdll: Doubly Linked List
+    :return: None
+    """
     cdll.go_prev()
     cdll.print_current()
 
 
-def print_skip_tweet(command: int, cdll: CDLL):
+def print_skip_tweet(command: int, cdll: CDLL) -> None:
+    """
+    Print the tweet after n-th time skipping
+    :param command: number of time to skip
+    :param cdll: Doubly Linked List
+    :return: None
+    """
     cdll.skip(command)
     cdll.print_current()
 
 
-def search_word(command: str, cdll: CDLL):
+def search_word(command: str, cdll: CDLL) -> None:
+    """
+    Go through each node and Look for a string pattern in a tweet.
+    If there is none, it will let the user know.
+    :param command: a string to look for in a tweet
+    :param cdll: Double linked list
+    :return: None
+    """
     cdll.go_next()
     for i in range(cdll.get_num_node()):
         if command in cdll.current.tweet:
@@ -267,10 +323,16 @@ def search_word(command: str, cdll: CDLL):
         cdll.current = cdll.current.next_node
     print("Word not found")
 
-def print_num_nodes(cdll: CDLL):
+def print_num_nodes(cdll: CDLL) -> None:
+    """
+    Print the number of tweets in the list
+    :param cdll: Dooubly Linked List
+    :return: None
+    """
     print(cdll.get_num_node())
 
-
+"""
+//To Do //
 def switch_func(command: str, cdll: CDLL) -> None:
     if command.isnumeric():
         num_to_skip = int(command)
@@ -290,8 +352,15 @@ def switch_func(command: str, cdll: CDLL) -> None:
         command_dic.get(num_to_skip)
     else:
         command_dic.get(command)
+"""
 
 def bucket_write(arr: CDLL, name: str) -> None:
+    """
+    Write a txt file of linked list
+    :param arr: Doubly Linked List
+    :param name: the name to use in printing
+    :return: None
+    """
     orig_stdout = sys.stdout
     with open(name + '.txt', 'w') as name:
         # Make standard output point to our file
@@ -306,7 +375,8 @@ def bucket_write(arr: CDLL, name: str) -> None:
 
 def main() -> None:
     """
-    The main function
+    Optimize.py main function.
+    Usage: ./optimize.py FILENAME
     :return: None
     """
     # START MY TIMER
